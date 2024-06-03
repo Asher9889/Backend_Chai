@@ -35,10 +35,9 @@ const userSchema  = new mongoose.Schema({
     },
     coverImage: {
         type: String, // cloudnary se layenge 
-        required: true,
     },
     watchHistory: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Video"
     }],
     password: {

@@ -12,6 +12,9 @@ const uploadOnCloudinary = async (localFilePath) =>{
         const res = await cloudinary.uploader.upload( localFilePath, {
             resource_type: "auto",
         })
+        // ye iss liye hai quki jb file successfully upload ho jayegi cloud mai
+        // tb iss file to syncronusly unlink kr lo file system se
+        fs.unlinkSync(localFilePath)
         return res;
     } catch (error) {
         fs.unlinkSync(localFilePath)
@@ -19,3 +22,5 @@ const uploadOnCloudinary = async (localFilePath) =>{
     }
     
 }
+
+export {uploadOnCloudinary}
