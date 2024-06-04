@@ -14,11 +14,14 @@ const uploadOnCloudinary = async (localFilePath) =>{
         })
         // ye iss liye hai quki jb file successfully upload ho jayegi cloud mai
         // tb iss file to syncronusly unlink kr lo file system se
-        fs.unlinkSync(localFilePath)
+        if (localFilePath && fs.existsSync(localFilePath)) {
+            fs.unlinkSync(localFilePath);
+        }
         return res;
     } catch (error) {
         fs.unlinkSync(localFilePath)
-        return null;
+        console.log("photo unlink success")
+        
     }
     
 }

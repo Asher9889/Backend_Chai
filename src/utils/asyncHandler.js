@@ -7,7 +7,7 @@ const asyncHandler = (fn) => async (req, res, next) => {
     res.status(error.status || 400).json({
       success: false,
       statusCode: error.status,
-      message: error.message
+      message: error.message,
     })
   }
 };

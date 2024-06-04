@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
 
 const userSchema  = new mongoose.Schema({
     userName: {
@@ -51,10 +52,13 @@ const userSchema  = new mongoose.Schema({
 }, {timestamps: true})
 
 userSchema.pre("save", async  function (next){
-    this.password = await bcrypt.hash(this.password, 10)
+    // ye line pehle likhna bhut zaruri hai
+    if(!this.isModified("password")) return next();
+
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 
-    if(!this.isModified("password")) return next();
+   
 })
 
 userSchema.methods.isPasswordCorrect = async function(password){
@@ -65,13 +69,13 @@ userSchema.methods.generateAccessToken = function (){
     return jwt.sign(
         {
             _id: this._id,
-            email: this.email,
+            email: this.email, 
             userName: this.userName,
             fullName: this.fullName,
             // in sb feild ko use kr k ek lambi si encrypted string bana dega JWT 
         },
-        ACCESS_TOKEN_SECRET,
-        {expiryIn: ACCESS_TOKEN_EXPIRY}
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: process.env.ACCESS_TOKEN_EXPIRY}
     )
         
 }
@@ -84,8 +88,8 @@ userSchema.methods.generateRefreshToken = function (){
             // jwt time nhi leta hai jayada isiliye promise4s use ni kiya hai
             // in sb feild ko use kr k ek lambi si encrypted string bana dega JWT 
         },
-        REFRESH_TOKEN_SECRET,
-        {expiryIn: REFRESH_TOKEN_EXPIRY}
+        process.env.REFRESH_TOKEN_SECRET,
+        {expiresIn: process.env.REFRESH_TOKEN_EXPIRY}
     )
         
 }
